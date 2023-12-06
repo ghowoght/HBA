@@ -1,9 +1,13 @@
 <launch>
   <node pkg="hba" type="visualize_map" name="visualize_map" output="screen">
-    <param name="file_path" type="string"
-      value="/home/sam/Desktop/kitti07/"/>
+    <param name="auto_run" type="bool" value="true"/>
+    <!-- 如果指定auto_run,则自动在root_dir中搜索最新的路径 -->
+    <param name="root_dir" type="string" value="/media/ghowoght/T7/result"/>
+    <!-- 如果不指定auto_run,则按照以下的路径运行 -->
+    <param name="file_path" type="string" value="/media/ghowoght/T7/result/20231205_194505/hba_output/"/>
+
     <param name="downsample_size" type="double" value="0.1"/>
-    <param name="pcd_name_fill_num" type="int" value="5"/> <!--set 5 for kitti07 and 0 for park-->
+    <param name="pcd_name_fill_num" type="int" value="0"/> <!--set 5 for kitti07 and 0 for park-->
     <param name="marker_size" type="double" value="0.5"/>
   </node>
 

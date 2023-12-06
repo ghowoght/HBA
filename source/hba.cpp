@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <filesystem>
 
 #include <mutex>
 #include <assert.h>
@@ -502,8 +503,34 @@ int main(int argc, char** argv)
 
   nh.getParam("total_layer_num", total_layer_num);
   nh.getParam("pcd_name_fill_num", pcd_name_fill_num);
-  nh.getParam("data_path", data_path);
   nh.getParam("thread_num", thread_num);
+
+  bool auto_run = false;
+  nh.getParam("auto_run", auto_run);
+  ROS_INFO("auto_run: %d", auto_run);
+  if(auto_run){
+    std::string root_dir = "";
+    nh.getParam("root_dir", root_dir);
+    if(root_dir == ""){
+      std::cout << "please input root_dir" << std::endl;
+      return -1;
+    }
+    std::cout << "root_dir: " << root_dir << std::endl;
+
+    // 读取文件夹下所有文件夹名,并存入vector    
+    std::vector<std::string> sub_paths;
+    for (const auto & entry : std::filesystem::directory_iterator(root_dir)){
+        sub_paths.push_back(entry.path());
+    }
+    std::sort(sub_paths.begin(), sub_paths.end());
+
+    auto sub_path = sub_paths.back();
+    data_path = sub_path + "/hba_output/";
+  }
+  else{
+    nh.getParam("data_path", data_path);
+  }
+  ROS_INFO("data_path: %s", data_path.c_str());
 
   HBA hba(total_layer_num, data_path, thread_num);
   for(int i = 0; i < total_layer_num-1; i++)

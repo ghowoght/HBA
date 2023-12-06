@@ -1,3 +1,21 @@
+# 操作说明
+
+1. 生成初始位姿. 使用simple_msckf_lio生成初始位姿文件, 输出的结果文件将存放在config.yaml文件中指定的路径下, 每一次运行都会在该路径下生成一个新的文件夹, 文件夹名字为时间戳, 生成的pcd文件和位姿文件存放于hba_output文件夹中, 格式示例如下:
+
+```
+/media/ghowoght/T7/result/20231206_104655/hba_output
+```
+
+2. HBA优化. 切换到HBA工作区, 修改hba.launch文件中的参数, 主要需要修改文件路径, 有两种模式, 第一种是自动模式, 需要设置auto_run和root_dir, auto_run为true, root_dir为config.yaml中指定的输出路径, 该模式下, 程序会自动读取root_dir下的最新的文件夹, 并将该文件夹下的pcd文件和位姿文件作为输入, 进行HBA优化, 第二种是手动模式, 需要设置auto_run为false, 并且指定data_path. **推荐使用自动模式**
+
+3. 可视化. 与上一步骤类似, 省略
+
+4. 合并点云. 将点云合并成一个文件, 便于后续使用CloudCompare处理. 需要修改`transform_body_to_world.launch`中的path参数, 最后运行:
+  
+```bash
+roslaunch hba transform_body_to_world.launch
+```
+
 # HBA: A Globally Consistent and Efficient Large-Scale LiDAR Mapping Module
 
 ## **1. Introduction**

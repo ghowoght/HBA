@@ -11,6 +11,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread -std=c++0x -std=c++17 -fexceptions")
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
+# 生成complie commands
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -48,3 +51,10 @@ target_link_libraries(hba ${catkin_LIBRARIES} ${PCL_LIBRARIES} gtsam)
 
 add_executable(visualize_map source/visualize.cpp)
 target_link_libraries(visualize_map ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(transform_body_to_world source/transform_body_to_world.cpp)
+target_link_libraries(transform_body_to_world 
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${Eigen_LIBRARIES}  
+)

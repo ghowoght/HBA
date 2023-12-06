@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
+#include <vector>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -47,7 +49,33 @@ int main(int argc, char** argv)
   double downsample_size, marker_size;
   int pcd_name_fill_num;
 
-  nh.getParam("file_path", file_path);
+  bool auto_run = false;
+  nh.getParam("auto_run", auto_run);
+  ROS_INFO("auto_run: %d", auto_run);
+  if(auto_run){
+    std::string root_dir = "";
+    nh.getParam("root_dir", root_dir);
+    if(root_dir == ""){
+      std::cout << "please input root_dir" << std::endl;
+      return -1;
+    }
+    std::cout << "root_dir: " << root_dir << std::endl;
+
+    // 读取文件夹下所有文件夹名,并存入vector    
+    std::vector<std::string> sub_paths;
+    for (const auto & entry : std::filesystem::directory_iterator(root_dir)){
+        sub_paths.push_back(entry.path());
+    }
+    std::sort(sub_paths.begin(), sub_paths.end());
+
+    auto sub_path = sub_paths.back();
+    file_path = sub_path + "/hba_output/";
+  }
+  else{
+    nh.getParam("file_path", file_path);
+  }
+  ROS_INFO("file_path: %s", file_path.c_str());
+
   nh.getParam("downsample_size", downsample_size);
   nh.getParam("pcd_name_fill_num", pcd_name_fill_num);
   nh.getParam("marker_size", marker_size);
